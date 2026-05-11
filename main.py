@@ -270,8 +270,11 @@ def run_debate(topic: str) -> DebateState:
     if result["errors"]:
         print(f"\n[ERRORS] {result['errors']}")
 
-    langfuse_handler.flush()
-    print(f"\n[Langfuse] Trace: https://cloud.langfuse.com/trace/{langfuse_handler.last_trace_id}")
+    langfuse_handler._langfuse_client.flush()
+    if langfuse_handler.last_trace_id:
+        print(f"\n[Langfuse] Trace: https://cloud.langfuse.com/trace/{langfuse_handler.last_trace_id}")
+    else:
+        print("\n[Langfuse] No trace recorded — add LANGFUSE_PUBLIC_KEY + LANGFUSE_SECRET_KEY to .env")
 
     return result
 
