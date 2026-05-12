@@ -1,0 +1,29 @@
+project:
+  name: emergent-canopy
+  mode: research-demo
+
+data:
+  region_query: Westminster
+  cell_size_meters: 150
+  data_dir: data
+
+pipeline:
+  top_k: 5
+  write_trace: true
+  enable_llm_explanations: true
+
+agents:
+  heat_weight: 0.30
+  equity_weight: 0.30
+  biodiversity_weight: 0.15
+  feasibility_weight: 0.15
+  budget_weight: 0.10
+
+evaluation:
+  compare_greedy_baseline: true
+  compare_low_score_reference: true
+
+runtime:
+  langfuse_optional: true
+  denario_runtime_check: true
+  ag2_runtime_check: true

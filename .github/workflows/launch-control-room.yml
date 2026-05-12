@@ -1,0 +1,155 @@
+name: Launch Emergent Canopy Control Room
+
+on:
+  workflow_dispatch:
+    inputs:
+      area:
+        description: "Area query to prefill in the control room"
+        required: false
+        default: "Westminster"
+      cell_size:
+        description: "Suggested cell size in meters"
+        required: false
+        default: "150"
+      top_k:
+        description: "Suggested number of recommendations"
+        required: false
+        default: "5"
+      budget:
+        description: "Suggested planning budget"
+        required: false
+        default: "3"
+      strict_llm:
+        description: "Fail if debate model calls are unavailable"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  launch-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_DEBATE_REQUIRED: ${{ inputs.strict_llm && '1' || '0' }}
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+      STREAMLIT_SERVER_HEADLESS: "true"
+      STREAMLIT_SERVER_PORT: "8501"
+      STREAMLIT_SERVER_ADDRESS: "0.0.0.0"
+      DEMO_AREA: ${{ inputs.area }}
+      DEMO_CELL_SIZE: ${{ inputs.cell_size }}
+      DEMO_TOP_K: ${{ inputs.top_k }}
+      DEMO_BUDGET: ${{ inputs.budget }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gdal-bin libgdal-dev
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Install cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+
+      - name: Start Streamlit control room
+        run: |
+          nohup python -m streamlit run app.py > streamlit.log 2>&1 &
+
+      - name: Wait for local app
+        run: |
+          python - <<'PY'
+          import sys
+          import time
+          from urllib.request import urlopen
+
+          deadline = time.time() + 120
+          url = "http://127.0.0.1:8501"
+          while time.time() < deadline:
+              try:
+                  with urlopen(url, timeout=5) as response:
+                      if response.status == 200:
+                          print("Streamlit is ready")
+                          sys.exit(0)
+              except Exception:
+                  time.sleep(2)
+          raise SystemExit("Streamlit did not become ready in time")
+          PY
+
+      - name: Start public tunnel
+        run: |
+          nohup ./cloudflared tunnel --url http://127.0.0.1:8501 --no-autoupdate > cloudflared.log 2>&1 &
+
+      - name: Capture public URL
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import time
+          from pathlib import Path
+
+          log_path = Path("cloudflared.log")
+          deadline = time.time() + 90
+          pattern = re.compile(r"https://[-a-zA-Z0-9]+\.trycloudflare\.com")
+          match = None
+
+          while time.time() < deadline:
+              if log_path.exists():
+                  text = log_path.read_text(errors="ignore")
+                  found = pattern.search(text)
+                  if found:
+                      match = found.group(0)
+                      break
+              time.sleep(2)
+
+          if not match:
+              raise SystemExit("Could not find a public trycloudflare URL in cloudflared.log")
+
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          summary.write_text(
+              "\n".join(
+                  [
+                      "## Emergent Canopy Control Room URL",
+                      "",
+                      f"Open the app here: {match}",
+                      "",
+                      "### Session Notes",
+                      f"- Suggested area: {os.environ['DEMO_AREA']}",
+                      f"- Suggested cell size: {os.environ['DEMO_CELL_SIZE']}",
+                      f"- Suggested top_k: {os.environ['DEMO_TOP_K']}",
+                      f"- Suggested budget: {os.environ['DEMO_BUDGET']}",
+                      f"- Strict LLM debate: {os.environ['OPENAI_DEBATE_REQUIRED']}",
+                      "",
+                      "The workflow keeps the tunnel alive for roughly 55 minutes unless you stop the run.",
+                  ]
+              )
+          )
+
+          github_output = Path(os.environ["GITHUB_OUTPUT"])
+          github_output.write_text(f"public_url={match}\n")
+          print(match)
+          PY
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergent-canopy-logs
+          path: |
+            streamlit.log
+            cloudflared.log
+
+      - name: Keep control room alive
+        run: sleep 3300

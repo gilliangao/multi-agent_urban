@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Emergent Canopy agent-focused architecture</title>
+  <desc id="desc">Agent-focused architecture diagram showing five specialist agents, their objective signals, the coordination loop, the debate loop, judge aggregation, and final explainable recommendations.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <marker id="soft-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; filter: url(#shadow); }
+      .pipeline { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .agent { fill: #fff7ed; stroke: #ea580c; stroke-width: 2; }
+      .coord { fill: #ecfdf5; stroke: #059669; stroke-width: 2; }
+      .debate { fill: #f5f3ff; stroke: #7c3aed; stroke-width: 2; }
+      .judge { fill: #fdf2f8; stroke: #db2777; stroke-width: 2; }
+      .output { fill: #f1f5f9; stroke: #475569; stroke-width: 2; }
+      .title { font-family: Inter, Arial, sans-serif; fill: #0f172a; font-size: 31px; font-weight: 800; }
+      .subtitle { font-family: Inter, Arial, sans-serif; fill: #475569; font-size: 18px; }
+      .section { font-family: Inter, Arial, sans-serif; fill: #0f172a; font-size: 23px; font-weight: 800; }
+      .h { font-family: Inter, Arial, sans-serif; fill: #0f172a; font-size: 18px; font-weight: 800; }
+      .body { font-family: Inter, Arial, sans-serif; fill: #334155; font-size: 15px; }
+      .small { font-family: Inter, Arial, sans-serif; fill: #475569; font-size: 13px; }
+      .micro { font-family: Inter, Arial, sans-serif; fill: #64748b; font-size: 12px; }
+      .arrow { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .soft { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#soft-arrow); }
+      .dash { stroke: #64748b; stroke-width: 2; stroke-dasharray: 7 7; fill: none; marker-end: url(#soft-arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1600" height="1100"/>
+
+  <text x="70" y="62" class="title">Emergent Canopy: Agent-Focused Multi-Agent Architecture</text>
+  <text x="70" y="94" class="subtitle">Five specialist agents evaluate the same candidate planting cells, then participate in coordination and debate before explainable recommendations are produced.</text>
+
+  <rect x="60" y="135" width="1480" height="125" rx="18" class="panel"/>
+  <text x="90" y="175" class="section">1. Shared Evidence Becomes Candidate Cells</text>
+
+  <rect x="90" y="197" width="245" height="42" rx="10" class="pipeline"/>
+  <text x="112" y="224" class="h">Spatial data</text>
+
+  <rect x="390" y="197" width="245" height="42" rx="10" class="pipeline"/>
+  <text x="412" y="224" class="h">Data loader</text>
+
+  <rect x="690" y="197" width="245" height="42" rx="10" class="pipeline"/>
+  <text x="712" y="224" class="h">Grid + feature scoring</text>
+
+  <rect x="990" y="197" width="250" height="42" rx="10" class="pipeline"/>
+  <text x="1012" y="224" class="h">Candidate CellScore[]</text>
+
+  <text x="1265" y="216" class="body">Each cell has cooling, pollution, equity, biodiversity, feasibility, and budget-fit signals.</text>
+
+  <path d="M335 218 L390 218" class="arrow"/>
+  <path d="M635 218 L690 218" class="arrow"/>
+  <path d="M935 218 L990 218" class="arrow"/>
+
+  <rect x="60" y="300" width="720" height="610" rx="18" class="panel"/>
+  <text x="90" y="342" class="section">2. Specialist Agents</text>
+  <text x="90" y="370" class="body">Every agent ranks or votes on the same cells, but each optimizes a different planning concern.</text>
+
+  <rect x="90" y="405" width="300" height="76" rx="12" class="agent"/>
+  <text x="115" y="435" class="h">HeatAgent</text>
+  <text x="115" y="460" class="body">Signal: cooling_need</text>
+  <text x="115" y="477" class="small">Prioritizes dense, hot, low-canopy cells.</text>
+
+  <rect x="450" y="405" width="300" height="76" rx="12" class="agent"/>
+  <text x="475" y="435" class="h">PollutionAgent</text>
+  <text x="475" y="460" class="body">Signal: pollution_need</text>
+  <text x="475" y="477" class="small">Prioritizes road exposure and pressure.</text>
+
+  <rect x="90" y="515" width="300" height="76" rx="12" class="agent"/>
+  <text x="115" y="545" class="h">EquityAgent</text>
+  <text x="115" y="570" class="body">Signal: equity_need</text>
+  <text x="115" y="587" class="small">Prioritizes low park access and scarcity.</text>
+
+  <rect x="450" y="515" width="300" height="76" rx="12" class="agent"/>
+  <text x="475" y="545" class="h">BiodiversityAgent</text>
+  <text x="475" y="570" class="body">Signal: biodiversity_need</text>
+  <text x="475" y="587" class="small">Balances tree adjacency and connectivity.</text>
+
+  <rect x="270" y="625" width="300" height="76" rx="12" class="agent"/>
+  <text x="295" y="655" class="h">FeasibilityAgent</text>
+  <text x="295" y="680" class="body">Signal: feasibility + budget_fit</text>
+  <text x="295" y="697" class="small">Prefers deployable, budget-compatible cells.</text>
+
+  <rect x="90" y="750" width="660" height="108" rx="12" fill="#ffffff" stroke="#fed7aa" stroke-width="2"/>
+  <text x="118" y="782" class="h">Common agent contract</text>
+  <text x="118" y="810" class="body">Input: scored candidate cells.</text>
+  <text x="118" y="836" class="body">Coordination output: preferred cell for each budget round.</text>
+  <text x="118" y="862" class="body">Debate output: support / oppose / abstain vote, score, and rationale.</text>
+
+  <rect x="860" y="300" width="320" height="610" rx="18" class="panel"/>
+  <text x="890" y="342" class="section">3A. Coordination</text>
+  <text x="890" y="370" class="body">A MARL-style episode selects cells across budgeted rounds.</text>
+
+  <rect x="900" y="420" width="240" height="65" rx="12" class="coord"/>
+  <text x="925" y="450" class="h">Agent preferences</text>
+  <text x="925" y="472" class="small">top remaining cell per agent</text>
+
+  <rect x="900" y="535" width="240" height="65" rx="12" class="coord"/>
+  <text x="925" y="565" class="h">Coalition count</text>
+  <text x="925" y="587" class="small">agreement vs conflict</text>
+
+  <rect x="900" y="650" width="240" height="65" rx="12" class="coord"/>
+  <text x="925" y="680" class="h">Select cell</text>
+  <text x="925" y="702" class="small">tie-break by score + feasibility</text>
+
+  <rect x="900" y="765" width="240" height="65" rx="12" class="coord"/>
+  <text x="925" y="795" class="h">Episode metrics</text>
+  <text x="925" y="817" class="small">reward, coordination, conflict</text>
+
+  <path d="M1020 485 L1020 535" class="arrow"/>
+  <path d="M1020 600 L1020 650" class="arrow"/>
+  <path d="M1020 715 L1020 765" class="arrow"/>
+
+  <rect x="1220" y="300" width="320" height="610" rx="18" class="panel"/>
+  <text x="1250" y="342" class="section">3B. Debate</text>
+  <text x="1250" y="370" class="body">LangGraph asks each specialist to vote, then Judge aggregates.</text>
+
+  <rect x="1260" y="410" width="240" height="58" rx="12" class="debate"/>
+  <text x="1285" y="445" class="h">Heat vote</text>
+
+  <rect x="1260" y="486" width="240" height="58" rx="12" class="debate"/>
+  <text x="1285" y="521" class="h">Pollution vote</text>
+
+  <rect x="1260" y="562" width="240" height="58" rx="12" class="debate"/>
+  <text x="1285" y="597" class="h">Equity vote</text>
+
+  <rect x="1260" y="638" width="240" height="58" rx="12" class="debate"/>
+  <text x="1285" y="673" class="h">Biodiversity vote</text>
+
+  <rect x="1260" y="714" width="240" height="58" rx="12" class="debate"/>
+  <text x="1285" y="749" class="h">Feasibility vote</text>
+
+  <rect x="1260" y="810" width="240" height="58" rx="12" class="judge"/>
+  <text x="1285" y="845" class="h">Judge</text>
+
+  <path d="M1380 468 L1380 486" class="arrow"/>
+  <path d="M1380 544 L1380 562" class="arrow"/>
+  <path d="M1380 620 L1380 638" class="arrow"/>
+  <path d="M1380 696 L1380 714" class="arrow"/>
+  <path d="M1380 772 L1380 810" class="arrow"/>
+
+  <path d="M240 481 C760 481 720 452 900 452" class="dash"/>
+  <path d="M600 481 C800 481 780 452 900 452" class="dash"/>
+  <path d="M240 591 C760 591 720 452 900 452" class="dash"/>
+  <path d="M600 591 C800 591 780 452 900 452" class="dash"/>
+  <path d="M420 701 C760 701 720 452 900 452" class="dash"/>
+
+  <path d="M390 443 C865 443 915 439 1260 439" class="dash"/>
+  <path d="M750 443 C940 443 1005 515 1260 515" class="dash"/>
+  <path d="M390 553 C860 553 935 591 1260 591" class="dash"/>
+  <path d="M750 553 C940 553 1005 667 1260 667" class="dash"/>
+  <path d="M570 663 C900 663 1000 743 1260 743" class="dash"/>
+
+  <rect x="60" y="950" width="1480" height="100" rx="18" class="panel"/>
+  <text x="90" y="990" class="section">4. Final Recommendation Bundle</text>
+
+  <rect x="420" y="978" width="225" height="44" rx="10" class="output"/>
+  <text x="443" y="1006" class="h">Ranked cells</text>
+
+  <rect x="705" y="978" width="225" height="44" rx="10" class="output"/>
+  <text x="728" y="1006" class="h">Reason chains</text>
+
+  <rect x="990" y="978" width="225" height="44" rx="10" class="output"/>
+  <text x="1013" y="1006" class="h">Trace JSON</text>
+
+  <rect x="1275" y="978" width="225" height="44" rx="10" class="output"/>
+  <text x="1298" y="1006" class="h">UI / CLI display</text>
+
+  <path d="M1020 830 C1020 920 560 925 532 978" class="arrow"/>
+  <path d="M1380 868 C1380 925 820 930 817 978" class="arrow"/>
+  <path d="M645 1000 L705 1000" class="arrow"/>
+  <path d="M930 1000 L990 1000" class="arrow"/>
+  <path d="M1215 1000 L1275 1000" class="arrow"/>
+
+  <text x="90" y="1020" class="small">Implementation: `marl.py` runs coordination, `debate.py` runs LangGraph voting, `pipeline.py` merges both by promoting coordinated cells after debate ranking.</text>
+</svg>

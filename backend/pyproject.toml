@@ -1,0 +1,36 @@
+[project]
+name = "emergent-canopy-backend"
+version = "0.1.0"
+description = "Backend services for the Emergent Canopy multi-agent urban climate planning system."
+readme = "../README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "pyarrow",
+  "pandas",
+  "numpy",
+  "networkx",
+  "langgraph",
+  "langfuse",
+  "python-dotenv",
+  "shapely",
+  "streamlit",
+  "openai",
+  "denario",
+  "ag2[openai]",
+]
+
+[project.scripts]
+emergent-canopy-api = "urban_forest_ai.main:app"
+emergent-canopy-demo = "urban_forest_ai.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
